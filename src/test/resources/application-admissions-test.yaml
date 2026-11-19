@@ -1,0 +1,27 @@
+queueguard:
+  maintenance:
+    enabled: false
+  admission:
+    enabled: false
+  clients:
+    - client-id: commerce
+      token: test-commerce-token-not-for-production-0001
+      queues:
+        - queue-id: fifo
+          max-active-admissions: 3
+          admission-rate-per-second: 100000
+        - queue-id: rate-limited
+          max-active-admissions: 1000
+          admission-rate-per-second: 2
+        - queue-id: fast-expiry
+          max-active-admissions: 1
+          admission-rate-per-second: 100000
+          admission-ttl-seconds: 1
+        - queue-id: batch
+          max-active-admissions: 1000
+          admission-rate-per-second: 100000
+        - queue-id: shared
+    - client-id: events
+      token: test-events-token-not-for-production-000002
+      queues:
+        - queue-id: shared

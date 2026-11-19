@@ -1,0 +1,19 @@
+queueguard:
+  admission:
+    enabled: false
+  maintenance:
+    enabled: false
+  clients:
+    - client-id: commerce
+      token: test-commerce-token-not-for-production-0001
+      queues:
+        - queue-id: commerce-orders
+        - queue-id: limited
+          max-waiting-entries: 2
+        - queue-id: short-lived
+          waiting-ttl-seconds: 1
+        - queue-id: shared
+    - client-id: events
+      token: test-events-token-not-for-production-000002
+      queues:
+        - queue-id: shared

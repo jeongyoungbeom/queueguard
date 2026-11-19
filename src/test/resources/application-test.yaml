@@ -1,0 +1,16 @@
+spring:
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+queueguard:
+  clients:
+    - client-id: commerce
+      token: test-commerce-token-not-for-production-0001
+      queues:
+        - queue-id: commerce-orders
+    - client-id: events
+      token: test-events-token-not-for-production-000002
+      queues:
+        - queue-id: event-signup

@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: queueguard
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:16390}
+      connect-timeout: 2s
+      timeout: 2s
+
+server:
+  port: ${SERVER_PORT:18090}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+queueguard:
+  clients:
+    - client-id: commerce
+      token: ${QUEUEGUARD_COMMERCE_TOKEN:}
+      queues:
+        - queue-id: ${QUEUEGUARD_QUEUE_ID:commerce-orders}
+          max-active-admissions: 100
+          admission-rate-per-second: 20
+          admission-ttl-seconds: 300
+          max-waiting-entries: 10000
+          waiting-ttl-seconds: 3600
+          terminal-retention-seconds: 86400

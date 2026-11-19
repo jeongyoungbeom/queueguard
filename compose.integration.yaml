@@ -1,0 +1,35 @@
+name: queueguard-integration
+services:
+  queueguard:
+    build: .
+    environment:
+      SERVER_PORT: 18090
+      QUEUEGUARD_QUEUE_ID: ${QUEUEGUARD_QUEUE_ID:-commerce-orders}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUEGUARD_COMMERCE_TOKEN: ${QUEUEGUARD_COMMERCE_TOKEN:?Set a dedicated service credential}
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - private
+      - commerce-link
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - admission-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - private
+networks:
+  private:
+  commerce-link:
+    external: true
+    name: queueguard-commerce-link
+volumes:
+  admission-data:
